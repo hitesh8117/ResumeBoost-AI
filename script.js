@@ -15,10 +15,11 @@ const skills = [
 
 async function analyzeResume(){
 
-const file = document.getElementById("resumeFile").files[0];
+const file =
+document.getElementById("resumeFile").files[0];
 
 if(!file){
-alert("Upload Resume");
+alert("Please upload a resume");
 return;
 }
 
@@ -26,37 +27,41 @@ const reader = new FileReader();
 
 reader.onload = async function(){
 
-const typedarray = new Uint8Array(reader.result);
+const typedarray =
+new Uint8Array(reader.result);
 
-const pdf = await pdfjsLib.getDocument({
-data: typedarray
+const pdf =
+await pdfjsLib.getDocument({
+data:typedarray
 }).promise;
 
-let text = "";
+let text="";
 
 for(let i=1;i<=pdf.numPages;i++){
 
-const page = await pdf.getPage(i);
+const page =
+await pdf.getPage(i);
 
-const content = await page.getTextContent();
+const content =
+await page.getTextContent();
 
-text += content.items.map(
-item=>item.str
-).join(" ");
+text += content.items
+.map(item=>item.str)
+.join(" ");
 }
 
-runAnalysis(text);
+generateResult(text);
 
 };
 
 reader.readAsArrayBuffer(file);
 }
 
-function runAnalysis(text){
+function generateResult(text){
 
 const lower = text.toLowerCase();
 
-let found = [];
+let found=[];
 
 skills.forEach(skill=>{
 if(lower.includes(skill)){
@@ -64,26 +69,85 @@ found.push(skill);
 }
 });
 
-let score = Math.min(
+const missing =
+skills.filter(
+skill=>!found.includes(skill)
+);
+
+let score =
+Math.min(
 100,
-(found.length * 12)
+found.length*12
 );
 
-let missing = skills.filter(
-s=>!found.includes(s)
-);
+document.getElementById("result").innerHTML=`
 
-document.getElementById("result").innerHTML = `
-<h2>ATS Score : ${score}/100</h2>
+<div class="score-section">
 
-<p><b>Skills Found:</b><br>
-${found.join(", ")}</p>
+<div class="score-circle"
+style="--score:${score}%">
 
-<p><b>Missing Skills:</b><br>
-${missing.join(", ")}</p>
+<div class="score-inner">
 
-<p><b>Recommendation:</b><br>
-Add more technical skills and project details.</p>
+<div class="score-number">
+${score}
+</div>
+
+<div class="score-label">
+ATS SCORE
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div class="section-title">
+Skills Found
+</div>
+
+<div class="badges">
+
+${found.map(skill=>
+`<span class="badge found">${skill}</span>`
+).join("")}
+
+</div>
+
+</div>
+
+<div>
+
+<div class="section-title">
+Missing Skills
+</div>
+
+<div class="badges">
+
+${missing.map(skill=>
+`<span class="badge missing">${skill}</span>`
+).join("")}
+
+</div>
+
+</div>
+
+<div class="recommendation">
+
+<b>Recommendation:</b><br><br>
+
+Add project descriptions,
+quantifiable achievements,
+modern technologies like React,
+Node.js and MongoDB,
+and highlight GitHub deployments
+to improve ATS ranking.
+
+</div>
+
 `;
 
 }

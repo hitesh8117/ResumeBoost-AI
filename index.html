@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>ResumeBoost AI</title>
 
 <link rel="stylesheet" href="style.css">
@@ -13,19 +15,42 @@
 
 <body>
 
+<div class="bg"></div>
+
 <div class="container">
+
+<div class="card">
+
+<div class="header">
 
 <h1>ResumeBoost AI</h1>
 
-<p>Upload your resume and get ATS analysis</p>
+<p>Smart ATS Resume Analyzer</p>
 
-<input type="file" id="resumeFile" accept=".pdf">
+</div>
+
+<label class="upload-box">
+
+<input
+type="file"
+id="resumeFile"
+accept=".pdf"
+hidden
+>
+
+<div>
+📄 Upload Resume PDF
+</div>
+
+</label>
 
 <button onclick="analyzeResume()">
 Analyze Resume
 </button>
 
 <div id="result"></div>
+
+</div>
 
 </div>
 
